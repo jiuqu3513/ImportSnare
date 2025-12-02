@@ -277,6 +277,7 @@ def main(cfg: DictConfig):
         response = llm.query(query_prompt)
         logger.info(f"-------------Poisoned Output:-------------\n{response}\n\n")
         if clean_str(malicious_pkg) in clean_str(response):
+            # Need to manually check if malicious_pkg is in the comment of code of response
             posioned_asr_cnt += 1 
 
         ############################ Baseline ##############################
@@ -294,6 +295,7 @@ def main(cfg: DictConfig):
         response = llm.query(query_prompt)
         logger.info(f"-------------Baseline Output:-------------\n{response}\n\n")
         if clean_str(malicious_pkg) in clean_str(response):
+            # Need to manually check if malicious_pkg is in the comment of code of response
             baseline_asr_cnt += 1 
         # pbar.update(1)
 
