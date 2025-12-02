@@ -262,44 +262,6 @@ def load_rag_database(dataset_name_list,contriever_name,language='python'):
         else:
             print("Using Existing FAISS Database!")
             KNOWLEDGE_VECTOR_DATABASE=FAISS.load_local(faiss_index_path,embedding_model,allow_dangerous_deserialization=True)
-    elif language == 'java':
-        dataset_name_list_java = ['stack_java','java-exercise'] # 'codex_js'
-        faiss_index_path = os.path.join(os.getcwd(), "database_faiss",'java',contriever_name,'clean')
-        if not os.path.exists(faiss_index_path):
-            RAW_KNOWLEDGE_BASE = []
-            doc_idx = 0
-            for dataset_name in dataset_name_list_java:
-                if dataset_name == 'stack_java':
-                    # 
-                    ds = load_dataset("ammarnasr/the-stack-java-clean", split="train")
-                    RAW_KNOWLEDGE_BASE.extend([LangchainDocument(page_content=task['content'], metadata={"tot_idx":doc_idx+ds_idx,"ds_idx":ds_idx,"ds":dataset_name}) for ds_idx, task in tqdm(enumerate(ds))])
-                    doc_idx = len(RAW_KNOWLEDGE_BASE)                
-                elif dataset_name == 'java-exercise':
-                    '''
-                    <s>[INST] Write a Java program that checks whether an array is negative dominant or not. If the array is negative dominant return true otherwise false.   Example:
-                        Original array of numbers:
-                        [1, -2, -5, -4, 3, -6]
-                        Check Negative Dominance in the said array!true [/INST]
-                        // Import necessary Java classes.
-                        import java.util.Scanner;
-                        import java.util.Arrays;
-                        </s>
-                    '''
-                    ds = load_dataset("paula-rod-sab/java-exercise-codesc",split='train')
-                    RAW_KNOWLEDGE_BASE.extend([LangchainDocument(page_content=task['prompt'], metadata={"tot_idx":doc_idx+ds_idx,"ds_idx":ds_idx,"ds":dataset_name}) for ds_idx, task in tqdm(enumerate(ds))])
-                    doc_idx = len(RAW_KNOWLEDGE_BASE)
-            docs_processed = split_documents(
-                1024,  # We choose a chunk size adapted to our model
-                RAW_KNOWLEDGE_BASE,
-                tokenizer_name=EMBEDDING_MODEL_NAME,
-            )
-            KNOWLEDGE_VECTOR_DATABASE = FAISS.from_documents(
-                docs_processed, embedding_model, distance_strategy=DistanceStrategy.COSINE
-            )
-            KNOWLEDGE_VECTOR_DATABASE.save_local(faiss_index_path)  
-        else:
-            print("Using Existing FAISS Database!")
-            KNOWLEDGE_VECTOR_DATABASE=FAISS.load_local(faiss_index_path,embedding_model,allow_dangerous_deserialization=True)
     elif language == 'rust':
         dataset_name_list_rust = ['humaneval-rust','RustBioGPT','rust_instruction_dataset','neloy_rust_instruction_dataset'] # 'codex_js'
         faiss_index_path = os.path.join(os.getcwd(), "database_faiss",'rust',contriever_name,'clean')

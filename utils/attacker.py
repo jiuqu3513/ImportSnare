@@ -46,9 +46,6 @@ class Attacker():
                 result_json = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             result_json = {}
-
-        # tot_idx = result_dict["tot_idx"]
-        print('tot_idx:',tot_idx)
         str_doc_idx = str(doc_idx)
         exists = any(
             int(inner_dict.get('tot_idx')) == tot_idx
